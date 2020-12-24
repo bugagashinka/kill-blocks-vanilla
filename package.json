@@ -1,14 +1,17 @@
 {
-  "name": "block-game",
+  "name": "kill-blocks-vanilla",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
+  "homepage": "https://bugagashinka.github.io/kill-blocks-vanilla",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --mode development",
     "build": "cross-env NODE_ENV=production webpack --mode production",
     "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
     "start": "cross-env NODE_ENV=development webpack-dev-server --mode development --open",
-    "stats": "webpack --json > stats.json && webpack-bundle-analyzer stats.json"
+    "stats": "webpack --json > stats.json && webpack-bundle-analyzer stats.json",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
   },
   "browserslist": "> 0.25%, not dead",
   "devDependencies": {
@@ -24,6 +27,7 @@
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.0",
     "file-loader": "^6.0.0",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^4.2.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
@@ -39,6 +43,9 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
-    "normalize.css": "^8.0.1"
+    "bootstrap": "^4.5.3",
+    "jquery": "^3.5.1",
+    "normalize.css": "^8.0.1",
+    "popper.js": "^1.16.1"
   }
 }

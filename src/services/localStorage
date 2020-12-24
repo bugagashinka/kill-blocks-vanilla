@@ -1,0 +1,15 @@
+const SCORES_KEY = "scores";
+
+const addScores = (scores = []) => localStorage.setItem(SCORES_KEY, formatScores(scores));
+
+const getScores = () => formatScores(localStorage.getItem(SCORES_KEY)) || [];
+
+const formatScores = (scores) => {
+  try {
+    return JSON.parse(scores);
+  } catch (e) {
+    return JSON.stringify(scores);
+  }
+};
+
+export { addScores, getScores };

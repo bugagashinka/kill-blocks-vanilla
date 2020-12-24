@@ -1,20 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="favicon.ico" type="image/ico">
-    <title>New project</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="icon" href="favicon.ico" type="image/ico" />
+    <title>Kill blocks game</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <!-- Dashboard -->
+      <header class="dashboard row">
+        <section class="dashboard__controls col-xs-12 col-sm-6 col-lg-3">
+          <button id="toggle-game-btn" type="button" class="btn btn-outline-primary">Play</button>
+          <button id="replay-btn" type="button" class="btn btn-outline-secondary">Replay</button>
+          <a id="scores-btn" class="btn btn-outline-secondary" href="#scores-table" role="button">Scores</a>
+        </section>
+        <section class="statistic col-6 col-sm-3 col-lg-3">
+          <div class="statistic__title">Points:</div>
+          <div id="score" class="statistic__content"></div>
+        </section>
+        <section class="statistic col-6 col-sm-3 col-lg-3">
+          <div class="statistic__title">Timer</div>
+          <div id="timer" class="statistic__content"></div>
+        </section>
+      </header>
 
-<div class="container">
-    <div class="logo"></div>
+      <main class="row">
+        <!-- Stage -->
+        <section id="stage" class="stage col-md-8"></section>
+        <!-- Scores table -->
+        <table id="scores-table" class="table col-md-4 table-striped">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Score</th>
+            </tr>
+          </thead>
+          <tbody id="score-table-body"></tbody>
+        </table>
+      </main>
 
-    <div id="app"></div>
-</div>
-
-</body>
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="modal-window"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Save result</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="modal__score">
+                <p class="modal__text">Youre score:</p>
+                <span class="modal__score-value">0</span>
+              </div>
+              <p class="modal__text">Name:</p>
+              <input class="modal__input" maxlength="32" />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary modal__cancel-btn" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary modal__ok-btn">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
