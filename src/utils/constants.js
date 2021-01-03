@@ -14,3 +14,6 @@ export const LIFE_MAX_TIME = 2000;
 
 // Modal window constants
 export const DEFAULT_PLAYER_NAME = "Anonymous";
+
+// UI constants
+export const MAX_CELL_CONTENT = 16;
