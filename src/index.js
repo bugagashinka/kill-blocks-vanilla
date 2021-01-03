@@ -7,6 +7,7 @@ import {
   LIFE_MIN_TIME,
   LIFE_MAX_TIME,
   BLOCK_POOL_SIZE,
+  MAX_CELL_CONTENT,
 } from "@/utils/constants";
 
 import "bootstrap/dist/js/bootstrap.min.js";
@@ -15,7 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/index.scss";
 import "./assets/fonts/Roboto-Regular.ttf";
 import { getMagnitude, getRandom, getRandomColor } from "@/utils";
-import { addScores, getScores } from "./services/localStorage";
+import { addScores, getScores } from "./services/restService";
 
 (function (global) {
   // small: 0-15, middle: 16-50, large: 51-100
@@ -30,10 +31,17 @@ import { addScores, getScores } from "./services/localStorage";
   const window = global.window;
 
   //  UI elements
-  let stageElement, timerElement, scoreElement, tableElement, replayButton, toggleGameButton, modalWindow$, modalScore$;
+  let stageElement,
+    alertElement$,
+    timerElement,
+    scoreElement,
+    tableElement,
+    replayButton,
+    toggleGameButton,
+    modalWindow$,
+    modalScore$;
 
   // State
-  let scoreList = [];
   let isActiveGame = false;
   let currentTime = GAME_START_TIME;
   let score = 0;
@@ -91,6 +99,11 @@ import { addScores, getScores } from "./services/localStorage";
   //   --------------------------------------------
 
   // ----------------- UI ------------------
+  function showAlert(error) {
+    alertElement$.find(".alert-content").text(error.message);
+    alertElement$.show();
+  }
+
   function addScore(value) {
     score += value;
     scoreElement.textContent = score;
@@ -210,11 +223,11 @@ import { addScores, getScores } from "./services/localStorage";
     stageSize = [stageElement.clientWidth, stageElement.clientHeight];
   };
 
-  function populateTable() {
+  function populateTable(scoreList) {
     const tableRows = scoreList.map(({ name, score }) => {
       const row = document.createElement("tr");
       const nameCell = document.createElement("td");
-      nameCell.textContent = name;
+      nameCell.textContent = name.length > MAX_CELL_CONTENT ? `${name.slice(0, MAX_CELL_CONTENT)}...` : name;
       const scoreCell = document.createElement("td");
       scoreCell.textContent = score;
       row.append(nameCell, scoreCell);
@@ -233,6 +246,12 @@ import { addScores, getScores } from "./services/localStorage";
     toggleGameButton = document.getElementById("toggle-game-btn");
     modalWindow$ = $("#modal-window");
     modalScore$ = modalWindow$.find(".modal__score-value");
+    alertElement$ = $("#alert");
+    alertElement$.on("close.bs.alert", function () {
+      alertElement$.hide();
+      return false;
+    });
+    alertElement$.hide();
 
     //  Window resize handler
     window.addEventListener("resize", windowResizeHandler);
@@ -256,7 +275,9 @@ import { addScores, getScores } from "./services/localStorage";
     });
 
     // Scores table
-    populateTable();
+    getScores()
+      .then((scores) => populateTable(scores))
+      .catch(showAlert);
 
     // Modal window
     modalWindow$.modal({
@@ -267,18 +288,16 @@ import { addScores, getScores } from "./services/localStorage";
     modalWindow$.find(".modal__ok-btn").on("click", () => {
       const inputName = modalWindow$.find(".modal__input").val().trim();
       const name = inputName ? inputName : DEFAULT_PLAYER_NAME;
-      const newScore = { key: new Date().getTime(), name, score };
-      scoreList.push(newScore);
-      scoreList.sort(({ score: s1 }, { score: s2 }) => s2 - s1);
-      addScores(scoreList);
-      populateTable();
+      const newScore = { name, score };
+      addScores(newScore)
+        .then((scores) => populateTable(scores))
+        .catch(showAlert);
       modalWindow$.modal("hide");
     });
   }
   // ---------------------------------------
 
   const init = () => {
-    scoreList = getScores();
     initUI();
     initTimer();
     setInterval(gameLoop, TIME_PER_FRAME);
